@@ -5,6 +5,19 @@
 #include <random>
 
 int N = 50000;
+
+void checkEvents(sf::RenderWindow &window) {
+    sf::Event event{};
+    while (window.pollEvent(event))
+    {
+        // "close requested" event: we close the window
+        if (event.type == sf::Event::Closed) {
+            window.close();
+            exit(0);
+        }
+
+    }
+}
 int main() {
     boost::random::sobol s_rng(2);
     typedef boost::variate_generator<boost::random::sobol&, boost::uniform_01<float> > quasi_random_gen_t;
@@ -67,18 +80,7 @@ int main() {
     int i = 0;
     while (i < N)
     {
-        // check all the window's events that were triggered since the last iteration of the loop
-        sf::Event event{};
-        while (window.pollEvent(event))
-        {
-            // "close requested" event: we close the window
-            if (event.type == sf::Event::Closed) {
-                window.close();
-                exit(0);
-            }
-
-        }
-
+        checkEvents(window);
 
         point_vector.emplace_back(sf::Vector2f(gen.operator()()*side_size+square_start, gen.operator()()*side_size+square_start), sf::Color::White);
         for(auto & point : point_vector) {
