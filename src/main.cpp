@@ -96,10 +96,6 @@ int main() {
         float point_y = point_vector.back().position.y - square_start-radius;
         if(point_x*point_x  + point_y*point_y <= radius*radius) count_in_circle++;
 
-        sf::RectangleShape clearing(sf::Vector2f((float)window.getSize().x, square_start-1 ));
-        clearing.setFillColor(sf::Color::Black);
-        window.draw(clearing);
-
         std::string pi_estimate =  std::to_string(4 * float(count_in_circle) / float(i));
         text.setString(          "Pi estimate:            " + pi_estimate);
         window.draw(text);
