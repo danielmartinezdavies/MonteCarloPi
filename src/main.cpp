@@ -25,11 +25,6 @@ int main(int argc, char *argv[]) {
     std::string csv = "";
     const Parameters param = parseInputParameters(allArgs);
 
-    std::random_device non_det;
-    std::mt19937 generator (123);
-    std::uniform_real_distribution<float> dis(0.0, 1.0);
-    //double randomRealBetweenZeroAndOne = ;
-
     InformationBox info_box("../resources/arial.ttf");
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "MonteCarlo Pi");
