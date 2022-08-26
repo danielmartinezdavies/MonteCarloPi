@@ -6,7 +6,7 @@
 
 int N = 50000;
 
-void checkEvents(sf::RenderWindow &window) {
+void checkEvents(sf::RenderWindow &window, sf::View &view) {
     sf::Event event{};
     while (window.pollEvent(event))
     {
@@ -14,6 +14,30 @@ void checkEvents(sf::RenderWindow &window) {
         if (event.type == sf::Event::Closed) {
             window.close();
             exit(0);
+        }
+
+        if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+
+            if (event.mouseWheelScroll.delta > 0) {
+                view.zoom(0.9f);
+            }
+            else {
+                view.zoom(1 / 0.9f);
+            }
+        }
+        if(event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::Left) {
+                view.move(-view.getSize().x/10, 0);
+            }
+            if (event.key.code == sf::Keyboard::Right) {
+                view.move(view.getSize().x/10, 0);
+            }
+            if (event.key.code == sf::Keyboard::Up) {
+                view.move(0, -view.getSize().y/10);
+            }
+            if (event.key.code == sf::Keyboard::Down) {
+                view.move(0, view.getSize().y/10);
+            }
         }
     }
 }
@@ -86,12 +110,32 @@ int main() {
     int num_points_in_circle = 0;
     int num_points_in_total = 0;
     std::vector<sf::Vertex> point_vector;
+
+
+    sf::Texture texture2;
+    if(!texture2.loadFromFile("../resources/filename.png")) exit(-1);  //Load Texture from image
+    texture2.setSmooth(false);
+    sf::Sprite sprite;
+    sprite.setTexture(texture2);
+    sprite.setScale(sf::Vector2f(0.5f, 0.5f));
+
+    sf::View view(sf::FloatRect(0.f, 0.f, float(window.getSize().x), float(window.getSize().y)));
+    window.setView(view);
+
+    sf::View view_stats(sf::FloatRect(0.f, 0.f, float(window.getSize().x), square_start));
+    //window.setView(view_stats);
     while (num_points_in_total < N)
     {
-        checkEvents(window);
+        //view.zoom(0.99999f);
+
+        checkEvents(window, view);
+        window.setView(view);
+        //window.setView(view_stats);
 
         window.draw(circle);
         window.draw(square);
+
+        //window.draw(sprite);
 
         point_vector.emplace_back(sf::Vector2f(gen.operator()()*side_size+square_start, gen.operator()()*side_size+square_start), sf::Color::White);
 
