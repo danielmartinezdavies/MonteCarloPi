@@ -1,12 +1,6 @@
-
 #include "InformationBox.h"
 #include "FrameHandler.h"
-#include "RandomNumberGenerator.h"
-#include "SobolGenerator.h"
 #include "Parameters.h"
-#include <boost/random/sobol.hpp>
-#include <boost/random/uniform_01.hpp>
-#include <boost/random/variate_generator.hpp>
 #include <random>
 
 int N = 50000;
