@@ -17,7 +17,7 @@ To estimate pi, the following formula is used:
     
     4 * num_points_in_circle / num_points_in_total
 
-
+Some visual examples of the simulations are shown below:
 <p align="center">
     <img src="./resources/mersenne_twister.png" alt="picture of montecarlo simulation for calculating pi using mersenne twister "/>
     <img src="./resources/sobol.png" alt="picture of montecarlo simulation for calculating pi using sobol"/>
