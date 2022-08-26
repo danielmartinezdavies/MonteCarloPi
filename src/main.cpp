@@ -84,8 +84,8 @@ int main() {
 
     sf::Font font = loadFont();
 
-    sf::Text pi_estimate_text = createText(font, 24, sf::Color::White, 1,  0);
-    sf::Text number_points_text = createText(font, 24, sf::Color::White, 1,  24);
+    sf::Text pi_estimate_text = createText(font, 50, sf::Color::White, 1,  0);
+    sf::Text number_points_text = createText(font, 50, sf::Color::White, 1,  51);
 
     sf::RenderWindow window(sf::VideoMode(800, 800), "MonteCarlo Pi");
     window.clear(sf::Color::Black);
@@ -95,14 +95,15 @@ int main() {
 
     sf::RectangleShape square(sf::Vector2f(side_size, side_size));
     float square_start = (float)window.getSize().x / 2 - circle_radius;
-    square.setPosition( square_start, square_start);
+    float square_start_y = square_start - (window.getSize().y * 0.065);
+    square.setPosition( square_start, square_start_y);
     square.setFillColor(sf::Color::Transparent);
     square.setOutlineThickness(1);
     square.setOutlineColor(sf::Color::White);
 
 
     sf::CircleShape circle(circle_radius);
-    circle.setPosition( square_start, square_start);
+    circle.setPosition( square_start, square_start_y);
     circle.setFillColor(sf::Color::Transparent);
     circle.setOutlineThickness(1);
     circle.setOutlineColor(sf::Color::White);
@@ -122,8 +123,9 @@ int main() {
     sf::View view(sf::FloatRect(0.f, 0.f, float(window.getSize().x), float(window.getSize().y)));
     window.setView(view);
 
-    sf::View view_stats(sf::FloatRect(0.f, 0.f, float(window.getSize().x), square_start));
-    //window.setView(view_stats);
+    view.setViewport(sf::FloatRect(0, 0.15, 1, 1));
+    //view.(-200, 0);
+    sf::View view2;
     while (num_points_in_total < N)
     {
         //view.zoom(0.99999f);
@@ -137,7 +139,7 @@ int main() {
 
         //window.draw(sprite);
 
-        point_vector.emplace_back(sf::Vector2f(gen.operator()()*side_size+square_start, gen.operator()()*side_size+square_start), sf::Color::White);
+        point_vector.emplace_back(sf::Vector2f(gen.operator()()*side_size+square_start, gen.operator()()*side_size+square_start_y), sf::Color::White);
 
         for(auto & point : point_vector) {
             window.draw(&point, 1, sf::Points);
@@ -145,9 +147,10 @@ int main() {
         num_points_in_total++;
 
         float point_x = point_vector.back().position.x - square_start-circle_radius;
-        float point_y = point_vector.back().position.y - square_start-circle_radius;
+        float point_y = point_vector.back().position.y - square_start_y-circle_radius;
         if(point_x*point_x  + point_y*point_y <= circle_radius*circle_radius) num_points_in_circle++;
 
+        window.setView(view2);
         std::string pi_estimate =  std::to_string(4 * float(num_points_in_circle) / float(num_points_in_total));
         drawTopText(window, pi_estimate_text, number_points_text, pi_estimate, num_points_in_total);
 
