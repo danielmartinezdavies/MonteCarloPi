@@ -1,15 +1,10 @@
 #ifndef MONTECARLOPI_FRAMEHANDLER_H
 #define MONTECARLOPI_FRAMEHANDLER_H
 #include <SFML/Graphics.hpp>
-#include <boost/random/sobol.hpp>
-#include <boost/random/uniform_01.hpp>
-#include <utility>
-#include <boost/random/variate_generator.hpp>
 #include "InformationBox.h"
-
+#include "RandomNumberGenerator.h"
 void checkEvents(sf::RenderWindow &window, sf::View &view);
 
-template <typename Generator>
 class FrameHandler{
 public:
     sf::View view;
@@ -17,18 +12,16 @@ public:
     sf::CircleShape circle;
     sf::RectangleShape square;
     std::vector<sf::Vertex> point_vector;
-    Generator gen;
     InformationBox info_box;
 
 
     FrameHandler( const sf::View &view, const sf::View &view2,
                  sf::CircleShape circle, sf::RectangleShape square,
-                 const boost::variate_generator<boost::random::sobol &, boost::uniform_01<float>> &gen,
                  InformationBox infoBox) :  view(view), view2(view2), circle(std::move(circle)),
-                                                  square(std::move(square)), gen(gen),
+                                                  square(std::move(square)),
                                                   info_box(std::move(infoBox)) {}
 
-    void drawFrame(sf::RenderWindow &window, float square_start, float square_start_y, int &num_points_in_total, int &num_points_in_circle) {
+    void drawFrame(sf::RenderWindow &window, float square_start, float square_start_y, int &num_points_in_total, int &num_points_in_circle, const std::unique_ptr<RandomNumberGenerator> &gen) {
         auto side_size = square.getSize().x;
         auto circle_radius = circle.getRadius();
         checkEvents(window, view);
@@ -37,7 +30,7 @@ public:
         window.draw(circle);
         window.draw(square);
 
-        point_vector.emplace_back(sf::Vector2f(gen.operator()()*side_size+square_start, gen.operator()()*side_size+square_start_y), sf::Color::White);
+        point_vector.emplace_back(sf::Vector2f(gen->generate_number()*side_size+square_start, gen->generate_number()*side_size+square_start_y), sf::Color::White);
         for(auto & point : point_vector) {
             window.draw(&point, 1, sf::Points);
         }
